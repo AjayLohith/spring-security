@@ -1,6 +1,6 @@
 package com.ajay.springsecurity.entity.type;
 
-public enum AuthProvider {
+public enum AuthProviderType {
     GOOGLE,
     GITHUB,
     LOCAL,

@@ -23,10 +23,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserRepo userRepo;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request){
-        String header=request.getHeader("Authorization");
-        return header==null || !header.startsWith("Bearer");
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/api/auth/");
     }
+
 
     @Override
     protected void doFilterInternal(

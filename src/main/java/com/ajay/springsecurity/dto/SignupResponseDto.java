@@ -1,17 +1,22 @@
 package com.ajay.springsecurity.dto;
 
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 
 @Data
-public class SignupRequestDto {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class SignupResponseDto {
+
+    @Id
+    private Long id;
 
     @Email
     private String email;
 
-    @NotBlank
-    @Size(min=8,max = 30, message = "Password required")
-    private String password;
 }
