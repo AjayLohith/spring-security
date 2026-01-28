@@ -1,9 +1,7 @@
 package com.ajay.springsecurity.util;
 
 import com.ajay.springsecurity.entity.User;
-import com.ajay.springsecurity.entity.type.AuthProvider;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +23,9 @@ public class AuthUtil {
     public String generateToken(User user){
         return Jwts.builder()
                 .subject(user.getEmail())
-                .claim("userId",user.getId().toString())
+                .claim("userId",user.getId())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+1000*60*10))
+                .expiration(new Date(System.currentTimeMillis()+10*60*1000))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -53,13 +51,6 @@ public class AuthUtil {
         }
     }
 
-    public AuthProvider getAuthProviderFromRegistrationId(String registrationId){
-        return switch (registrationId.toLowerCase()){
-            case "google"->AuthProvider.GOOGLE;
-            case "github"->AuthProvider.GITHUB;
 
-            default -> throw new IllegalArgumentException("Invalid AuthProvider"+registrationId);
-        };
-    }
 
 }

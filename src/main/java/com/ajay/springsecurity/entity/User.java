@@ -1,20 +1,17 @@
 package com.ajay.springsecurity.entity;
 
-import com.ajay.springsecurity.entity.type.AuthProvider;
+import com.ajay.springsecurity.entity.type.AuthProviderType;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "app_user")
+@Builder
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +32,7 @@ public class User implements UserDetails {
     private String providerId;
 
     @Enumerated(EnumType.STRING)
-    private AuthProvider authProvider;
+    private AuthProviderType authProviderType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,8 +41,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<UserAuthProvider> providers=new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
