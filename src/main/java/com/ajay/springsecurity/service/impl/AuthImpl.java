@@ -31,12 +31,15 @@ public class AuthImpl implements AuthService {
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Authentication authentication=authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(),loginRequestDto.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getEmail(),
+                        loginRequestDto.getPassword()
+                )
         );
 
         User user= (User) authentication.getPrincipal();
 
-        if(user.getAuthProviderType()!= AuthProviderType.LOCAL){
+        if(user.getPassword() == null){
             throw new IllegalArgumentException("Use social login ");
         }
 
@@ -66,12 +69,18 @@ public class AuthImpl implements AuthService {
 
         User user = userRepo.findByEmail(email)
                 .map(existing -> {
+
+                    // Link provider if not already linked
                     if (existing.getProviderId() == null) {
                         existing.setProviderId(uid);
-                        existing.setAuthProviderType(authProviderType);
-                        return userRepo.save(existing);
                     }
-                    return existing;
+
+                    // DO NOT overwrite LOCAL
+                    if (existing.getAuthProviderType() == null) {
+                        existing.setAuthProviderType(authProviderType);
+                    }
+
+                    return userRepo.save(existing);
                 })
                 .orElseGet(() -> userRepo.save(
                         User.builder()

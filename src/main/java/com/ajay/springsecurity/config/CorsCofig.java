@@ -11,7 +11,8 @@ public class CorsCofig implements WebMvcConfigurer {
         corsRegistry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:5173",
-                        "http://localhost:8080"
+                        "http://localhost:5174",
+        "http://localhost:8080"
                 )
                 .allowedMethods("PUT","GET","POST","DELETE","OPTIONS")
                 .allowedHeaders("*")
